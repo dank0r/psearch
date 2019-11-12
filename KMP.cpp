@@ -37,7 +37,7 @@ KMP::KMP(string str) {
 	for(int i = 0; i < n_nodes - 1; i++) {
 		tr_f[i][str[i]] = i + 1;
 	}
-	for(int c = 32; c < 128; c++) {
+	for(int c = 0; c < 128; c++) {
 		for(int i = 0; i < n_nodes; i++) {
 			if(i != n_nodes - 1 && c == str[i]) {
 				continue;
