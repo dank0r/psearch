@@ -12,6 +12,7 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <string.h>
+#include "KMP.h"
 
 namespace fs = std::filesystem;
 using std::cout;
@@ -78,9 +79,11 @@ int main() {
 	int n_threads = 4;
 	string dir_path = "/home/dank0r/Desktop/text";
 	string substr = "the";
+	KMP fsm(substr);
 	vector<line> lines;
 	vector<thread> threads(n_threads);
 	vector<file> files;
+	
 	for(auto &p : fs::recursive_directory_iterator(dir_path)) {
 		if(fs::is_regular_file(p)) {
 			string file_path = p.path().string();
@@ -95,6 +98,12 @@ int main() {
 			cout << *it;
 		}
 		cout << endl;
+		int pos = fsm.find(occ.begin, occ.end);
+		if(pos != -1) {
+			cout << "Found \"" << substr << "\" at position " << pos << endl;
+		} else {
+			cout << "Not found \"" << substr << "\"" << endl;
+		}
 	}
 	for(auto &f : files) {
 		munmap(f.buf, f.fs);
