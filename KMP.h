@@ -1,11 +1,15 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <mutex>
 
 using std::cout;
 using std::endl;
 using std::vector;
 using std::string;
+using std::mutex;
+using callback = void (*)(unsigned long long, char*, size_t, size_t, string, mutex&);
+
 
 class KMP {
 	private:
@@ -30,5 +34,7 @@ class KMP {
 		void print();
 
 		//if substring has been found returns position of first occurence in input string, if not found returns -1
-		int find(char *begin, char *end);
+		int find(char *begin, char *end, callback found, string path, mutex &print_m);
+
+		void reset();
 };
