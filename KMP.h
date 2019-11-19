@@ -8,7 +8,7 @@ using std::endl;
 using std::vector;
 using std::string;
 using std::mutex;
-using callback = void (*)(unsigned long long, char*, size_t, size_t, string, mutex&);
+using callback = void (*)(unsigned long long, char*, size_t, size_t, string, mutex&, string);
 
 
 class KMP {

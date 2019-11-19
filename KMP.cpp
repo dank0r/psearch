@@ -13,7 +13,7 @@ using std::string;
 using std::pair;
 using std::make_pair;
 using std::mutex;
-using callback = void (*)(unsigned long long, char*, size_t, size_t, string, mutex&);
+using callback = void (*)(unsigned long long, char*, size_t, size_t, string, mutex&, string);
 
 //prefix function returns number of node (which btw is length of the word contained in node)
 int KMP::pr_func(string str) {
@@ -84,7 +84,7 @@ int KMP::find(char *begin, char *end, callback found, string path, mutex &print_
 		} else if(state == end_state) {
 			char *line_end = static_cast<char *>(memchr(symbol, '\n', static_cast<size_t>(end - symbol)));
 			size_t line_length = static_cast<size_t>(line_end - line_begin);
-			found(nol, line_begin, line_length, pos - substr.length(), path, print_m);
+			found(nol, line_begin, line_length, pos - substr.length(), path, print_m, substr);
 		}
 		//cout << "processing " << symbol[0] << endl;
 		state = tr_f[state][symbol[0]];

@@ -57,10 +57,17 @@ void add_file(file &f) {
 	close(f.fd);
 }
 
-void found(unsigned long long nol, char *line, size_t length, size_t pos, string path, mutex &print_m) {
+void found(unsigned long long nol, char *line, size_t length, size_t pos, string path, mutex &print_m, string substr) {
 	print_m.lock();
+	string cnorm = "\x1B[0m";
+	string cgreen = "\x1B[32m";
 	cout << "Found occurence in file " << path << endl << "at line " << nol << " (position #" << pos << ")" << ":" << endl;
 	for(size_t i = 0; i < length; i++) {
+		if(i == pos - 1) {
+			cout << cgreen;
+		} else if(i == pos - 1 + substr.length()) {
+			cout << cnorm;
+		}
 		cout << line[i];
 	}
 	cout << endl;
