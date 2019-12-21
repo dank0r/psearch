@@ -1,5 +1,5 @@
 CXX = c++
-CXXFLAGS = -std=c++17 -lpthread -lstdc++fs
+CXXFLAGS = -std=c++17 -lpthread -lstdc++fs -fsanitize=address
 OBJECTS = main.o KMP.o
 
 psearch: $(OBJECTS)

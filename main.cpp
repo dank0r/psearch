@@ -36,6 +36,7 @@ struct file {
 };
 
 void add_file(file &f) {
+	//cout << f.path << endl;
 	f.fd = open(f.path.c_str(), O_RDONLY);
 	if(f.fd == -1) {
 		cerr << "Cannot open file " << f.path << endl;
@@ -47,7 +48,7 @@ void add_file(file &f) {
 	}
 	f.fs = static_cast<size_t>(fs.st_size);
 	//posix_fadvise(f.fd, 0, 0, POSIX_FADV_NORMAL);
-
+	
 	f.buf = static_cast<char *>(mmap(NULL, f.fs, PROT_READ, MAP_SHARED, f.fd, 0));
 	if(f.buf == MAP_FAILED) {
 		cerr << "Cannot memory map file " << f.path << endl;
@@ -81,6 +82,19 @@ void thr(vector<file> &files, string substr, mutex &print_m) {
 	}
 }
 
+bool isEmpty(string &fpath) {
+	int fd = open(fpath.c_str(), O_RDONLY);
+        if(fd == -1) {
+                cerr << "Cannot open file " << fpath << endl;
+        }
+        struct stat fs;
+        if(fstat(fd, &fs) == -1) {
+                cerr << "Cannot open file " << fpath << endl;
+                close(fd);
+        }
+	return static_cast<size_t>(fs.st_size) == 0;
+}
+
 int main(int argc, char *argv[]) {
 	int n_threads = 1;
 	bool is_current_path = true;
@@ -111,6 +125,8 @@ int main(int argc, char *argv[]) {
 	if(is_recursive) {
 		for(auto &p : fs::recursive_directory_iterator(dir_path)) {
 			if(fs::is_regular_file(p)) {
+				string file_path = p.path().string();
+				if(!isEmpty(file_path))
 				if(is_current_path) {
 	                                char exe_path[1024];
 	                                int len = readlink("/proc/self/exe", exe_path, sizeof(exe_path) - 1);
@@ -119,15 +135,15 @@ int main(int argc, char *argv[]) {
 	                                        return 1;
 	                                }
 	                                exe_path[len] = 0;
-                        	        if(strcmp(p.path().string().c_str(), exe_path) != 0) {
-                     	                   string file_path = p.path().string();
+                        	        if(strcmp(file_path.c_str(), exe_path) != 0) {
+						//string file_path = p.path().string();
                                 	        int id = files.size();
                         	                file f {id, file_path};
                 	                        add_file(f);
         	                                files.push_back(f);
 	                                }
 				} else {
-                                        string file_path = p.path().string();
+                                        //string file_path = p.path().string();
                                         int id = files.size();
                                         file f {id, file_path};
                                         add_file(f);
@@ -138,6 +154,8 @@ int main(int argc, char *argv[]) {
 	} else {
                 for(auto &p : fs::directory_iterator(dir_path)) {
                         if(fs::is_regular_file(p)) {
+                                string file_path = p.path().string();
+                                if(!isEmpty(file_path))
                                 if(is_current_path) {
                                         char exe_path[1024];
                                         int len = readlink("/proc/self/exe", exe_path, sizeof(exe_path) - 1);
