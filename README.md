@@ -14,7 +14,7 @@ make
 ##### Required argument:
 `PATTERN` - this substring will be searched.
 ##### Optional arguments:
-`\t#` - Search using # threads. If not specified, 1 thread is used.  
+`-t#` - Search using # threads. If not specified, 1 thread is used.  
 `-n` - If flag set, search will occur only in specified directory. Otherwise, search will happen recursively among the subfolders.  
 `PATH` - Path to the folder where `PATTERN` should be searched. If not specified, current folder is used.  
 ##### Example:
